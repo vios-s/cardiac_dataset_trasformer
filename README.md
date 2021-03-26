@@ -15,6 +15,34 @@ The architecture has been implemented using the following:
 
 
 ## Transforming ACDC
+We assume the following structure when downloading ACDC from the provider.
+```
+acdc
+	|
+	|-----patient001
+	|		|-----Info.cfg
+	|		|-----patient001_4d.nii
+	|		|-----patient001_frame01.nii
+	|		|-----patient001_frame01_gt.nii
+	|		|-----patient001_frame12.nii
+	|		|-----patient001_frame12_gt.nii  
+	|
+	|-----patientXXX
+	|		|-----Info.cfg
+	|		|-----patientXXX_4d.nii
+	|		|-----patientXXX_frameXX.nii
+	|		|-----patientXXX_frameXX_gt.nii
+	|		|-----patientXXX_frameXX.nii
+	|		|-----patientXXX_frameXX_gt.nii  
+	|
+```
+More details about the data structure:
+- "Info.cfg" - configuration file that contains metadata, such as the pathology/disease class.
+- "patientXXX_4d.nii" - the full sequence of the MRI in NIFTI format.
+- "patientXXX_frameXX.nii" - end-systole or end-diastole frame in NIFTI format.
+- "patientXXX_frameXX_gt.nii" - pixel-level annotation of the end-systole or end-diastole frame in NIFTI format. The annotation covers 3 semantic classes: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
+
+The structure of the generated dataset will be as follows.
 
 ```
 python process_acdc.py --data_dir /path/to/ACDC
