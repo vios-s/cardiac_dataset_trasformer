@@ -197,4 +197,8 @@ To see all the available arguments (e.g. labeled | unlabeled, slice number, etc.
 python process_mnm.py --help
 ```
 
+## Examples
+
+
 ## License
+The code is released under the MIT License.
