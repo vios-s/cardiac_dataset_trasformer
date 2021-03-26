@@ -1,5 +1,5 @@
 # Cardiac dataset transformer
-Several medical datasets comprise data in DICOM format. Although this format includes a lot of valuable information (data + metadata in the header), it cannot be easily exploited with traditional image-based dataloaders (e.g. torchvision). Most of existing custom dataloaders load the DICOM data directly as tensors, even if we do not need all the information included in the "nii" file (e.g. all slices of an MRI), **overloading memory** and introducing **extra overhead** during training a DNN. In this repo, we propose dataset transformers that enable an image-based dataset generation from cardiac DICOM data. The generated datasets are ready-to-use with any generic image dataloader.
+Several medical datasets comprise data in DICOM format. Although this format includes a lot of valuable information (data + metadata in the header), it cannot be easily exploited with traditional image-based dataloaders (e.g. torchvision). Most of existing custom dataloaders load the DICOM data directly as tensors, even if we do not need all the information included in the "nii" file (e.g. all slices of an MRI), **overloading memory** and introducing **extra overhead** during training a DNN. In this repo, we propose dataset transformers that enable an image-based dataset generation from cardiac DICOM data. The generated datasets are ready-to-use with any generic image dataloader. The transformers are built for [PyTorch](https://pytorch.org/) and [PyTorch-Lightning](https://pytorch-lightning.readthedocs.io/en/latest/), however as the core processing is pure Python, they can be easily adapted for any DL framework. 
 
 
 ## Prerequisites
@@ -17,32 +17,68 @@ The architecture has been implemented using the following:
 ## Transforming ACDC
 We assume the following structure when downloading ACDC from the provider.
 ```
-acdc
-	|
-	|-----patient001
-	|		|-----Info.cfg
-	|		|-----patient001_4d.nii
-	|		|-----patient001_frame01.nii
-	|		|-----patient001_frame01_gt.nii
-	|		|-----patient001_frame12.nii
-	|		|-----patient001_frame12_gt.nii  
-	|
-	|-----patientXXX
-	|		|-----Info.cfg
-	|		|-----patientXXX_4d.nii
-	|		|-----patientXXX_frameXX.nii
-	|		|-----patientXXX_frameXX_gt.nii
-	|		|-----patientXXX_frameXX.nii
-	|		|-----patientXXX_frameXX_gt.nii  
-	|
+acdc_root
+  |
+  |-----patient001
+  |	  |-----Info.cfg
+  |	  |-----patient001_4d.nii
+  |	  |-----patient001_frame01.nii
+  |	  |-----patient001_frame01_gt.nii
+  |	  |-----patient001_frame12.nii
+  |	  |-----patient001_frame12_gt.nii  
+  |
+  |-----patientXXX
+  |	  |-----Info.cfg
+  |	  |-----patientXXX_4d.nii
+  |	  |-----patientXXX_frameXX.nii
+  |	  |-----patientXXX_frameXX_gt.nii
+  |	  |-----patientXXX_frameXX.nii
+  |	  |-----patientXXX_frameXX_gt.nii  
+  |
 ```
 More details about the data structure:
 - "Info.cfg" - configuration file that contains metadata, such as the pathology/disease class.
-- "patientXXX_4d.nii" - the full sequence of the MRI in NIFTI format.
-- "patientXXX_frameXX.nii" - end-systole or end-diastole frame in NIFTI format.
-- "patientXXX_frameXX_gt.nii" - pixel-level annotation of the end-systole or end-diastole frame in NIFTI format. The annotation covers 3 semantic classes: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
+- "patientXXX_4d.nii" - the **full sequence** of the MRI in NIFTI format.
+- "patientXXX_frameXX.nii" - **end-systole** or **end-diastole** frame in NIFTI format.
+- "patientXXX_frameXX_gt.nii" - **pixel-level annotation** of the end-systole or end-diastole frame in NIFTI format. The annotation covers **3 semantic classes**: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
 
 The structure of the generated dataset will be as follows.
+```
+processed_acdc_root
+	|
+  	|-----labeled_2
+  	|	  |-----images
+	|	  |	   |-----subject001_frame01_slice02
+	|	  |	   |-----subject001_frame12_slice02
+	|	  |	   |-----...
+	|	  |
+  	|	  |-----masks
+	|	  |	   |-----subject001_frame01_slice02_LV
+	|	  |	   |-----subject001_frame01_slice02_MYO
+	|	  |	   |-----subject001_frame01_slice02_RV
+	|	  |	   |-----subject001_frame12_slice02_LV
+	|	  |	   |-----subject001_frame12_slice02_MYO
+	|	  |	   |-----subject001_frame12_slice02_RV
+	|	  |	   |-----...
+	|	  |
+  	|	  |-----labels
+	|	  |	   |-----labels.json
+  	|
+  	|-----data-type_slice-number
+  	|	  |-----images
+	|	  |	   |-----subjectXXX_frameXX_sliceXX
+	|	  |	   |-----...
+	|	  |
+  	|	  |-----masks
+	|	  |	   |-----subjectXXX_frameXX_sliceXX_LV
+	|	  |	   |-----subjectXXX_frameXX_sliceXX_MYO
+	|	  |	   |-----subjectXXX_frameXX_sliceXX_RV
+	|	  |	   |-----...
+	|	  |
+  	|	  |-----labels
+	|	  |	   |-----labels.json
+	|
+```
 
 ```
 python process_acdc.py --data_dir /path/to/ACDC
