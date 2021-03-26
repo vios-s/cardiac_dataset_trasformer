@@ -5,8 +5,8 @@ Several medical datasets comprise data in DICOM format. Although this format inc
 ## Prerequisites
 The architecture has been implemented using the following:
 - Python 3.7.1
-- PyTorch Lightning
-- PyTorch 1.7
+- PyTorch Lightning 1.0.7
+- PyTorch 1.7.0
 
 
 ## Supported datasets
