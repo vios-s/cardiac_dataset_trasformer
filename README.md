@@ -199,6 +199,11 @@ python process_mnm.py --help
 
 ## Examples
 
+![acdc_images](./assets/example1.png)
+
+![mnm_images](./assets/example2.png)
+
+![acdc_masks](./assets/example3.png)
 
 ## License
 The code is released under the MIT License.
