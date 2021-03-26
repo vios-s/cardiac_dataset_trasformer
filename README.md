@@ -198,6 +198,7 @@ python process_mnm.py --help
 ```
 
 ## Examples
+Screenshots of the generated data structures in a Windows environment:
 
 ![acdc_images](./assets/example1.png)
 
