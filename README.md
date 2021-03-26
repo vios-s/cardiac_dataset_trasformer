@@ -37,10 +37,10 @@ acdc_root
   |
 ```
 More details about the data structure:
-- "Info.cfg" - configuration file that contains metadata, such as the pathology/disease class.
-- "patientXXX_4d.nii" - the **full sequence** of the MRI in NIFTI format.
-- "patientXXX_frameXX.nii" - **end-systole** or **end-diastole** frame in NIFTI format.
-- "patientXXX_frameXX_gt.nii" - **pixel-level annotation** of the end-systole or end-diastole frame in NIFTI format. The annotation covers **3 semantic classes**: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
+- Info.cfg - configuration file that contains metadata, such as the pathology/disease class.
+- patientXXX_4d.nii - the **full sequence** of the MRI in NIFTI format.
+- patientXXX_frameXX.nii - **end-systole** or **end-diastole** frame in NIFTI format.
+- patientXXX_frameXX_gt.nii - **pixel-level annotation** of the end-systole or end-diastole frame in NIFTI format. The annotation covers **3 semantic classes**: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
 
 The structure of the generated dataset will be as follows.
 ```
@@ -48,17 +48,17 @@ processed_acdc_root
 	|
   	|-----labeled_2
   	|	  |-----images
-	|	  |	   |-----subject001_frame01_slice02
-	|	  |	   |-----subject001_frame12_slice02
+	|	  |	   |-----subject001_frame01_slice02.png
+	|	  |	   |-----subject001_frame12_slice02.png
 	|	  |	   |-----...
 	|	  |
   	|	  |-----masks
-	|	  |	   |-----subject001_frame01_slice02_LV
-	|	  |	   |-----subject001_frame01_slice02_MYO
-	|	  |	   |-----subject001_frame01_slice02_RV
-	|	  |	   |-----subject001_frame12_slice02_LV
-	|	  |	   |-----subject001_frame12_slice02_MYO
-	|	  |	   |-----subject001_frame12_slice02_RV
+	|	  |	   |-----subject001_frame01_slice02_LV.png
+	|	  |	   |-----subject001_frame01_slice02_MYO.png
+	|	  |	   |-----subject001_frame01_slice02_RV.png
+	|	  |	   |-----subject001_frame12_slice02_LV.png
+	|	  |	   |-----subject001_frame12_slice02_MYO.png
+	|	  |	   |-----subject001_frame12_slice02_RV.png
 	|	  |	   |-----...
 	|	  |
   	|	  |-----labels
@@ -66,23 +66,33 @@ processed_acdc_root
   	|
   	|-----data-type_slice-number
   	|	  |-----images
-	|	  |	   |-----subjectXXX_frameXX_sliceXX
+	|	  |	   |-----subjectXXX_frameXX_sliceXX.png
 	|	  |	   |-----...
 	|	  |
   	|	  |-----masks
-	|	  |	   |-----subjectXXX_frameXX_sliceXX_LV
-	|	  |	   |-----subjectXXX_frameXX_sliceXX_MYO
-	|	  |	   |-----subjectXXX_frameXX_sliceXX_RV
+	|	  |	   |-----subjectXXX_frameXX_sliceXX_LV.png
+	|	  |	   |-----subjectXXX_frameXX_sliceXX_MYO.png
+	|	  |	   |-----subjectXXX_frameXX_sliceXX_RV.png
 	|	  |	   |-----...
 	|	  |
   	|	  |-----labels
 	|	  |	   |-----labels.json
 	|
 ```
+More details about the generated data structure:
+- data-type - referes to labeled or unlabeled data. By *labeled* we indicate the data that have segmentation masks annotation available. For the *unlabeled* data, the "masks" directory is not generated.
+- slice-number - indicates the chosen MRI slice. If slice-number is "-1" then all available slices have been generated.
+- images - the cardiac MRI in PNG format.
+- masks - the LV, MYO, RV binary segmentation masks in PNG format.
+- labels - a JSON file that contains the pathology/disease classes of the corresponding patient.
 
+The ACDC dataset can be transformed using the following command:
 ```
-python process_acdc.py --data_dir /path/to/ACDC
+python process_acdc.py --data_dir /path/to/ACDC --save_data_dir /path/to/processed/ACDC
 ```
+
+To see all the available arguments (e.g. labeled | unlabeled, slice number, etc.) run the following command:
+```python process_acdc.py --help```
 
 ## Transforming M&Ms
 
