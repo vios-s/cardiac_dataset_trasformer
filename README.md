@@ -42,7 +42,7 @@ More details about the data structure:
 - patientXXX_frameXX.nii - **end-systole** or **end-diastole** frame in NIFTI format.
 - patientXXX_frameXX_gt.nii - **pixel-level annotation** of the end-systole or end-diastole frame in NIFTI format. The annotation covers **3 semantic classes**: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
 
-The structure of the generated dataset will be as follows.
+The structure of the generated dataset will be as follows:
 ```
 processed_acdc_root
 	|
@@ -92,7 +92,9 @@ python process_acdc.py --data_dir /path/to/ACDC --save_data_dir /path/to/process
 ```
 
 To see all the available arguments (e.g. labeled | unlabeled, slice number, etc.) run the following command:
-```python process_acdc.py --help```
+```
+python process_acdc.py --help
+```
 
 ## Transforming M&Ms
 We assume the following structure when downloading M&Ms from the provider.
@@ -141,7 +143,7 @@ More details about the data structure:
 - patientXXX_sa.nii - the **full sequence** of the MRI in NIFTI format.
 - patientXXX_sa_gt.nii - **pixel-level annotation** of the end-systole or end-diastole frame in NIFTI format. The annotation covers **3 semantic classes**: left ventricular cavity (LV), myocardium (MYO) of the LV, and right ventricle (RV).
 
-The structure of the generated dataset will be as follows.
+The structure of the generated dataset will be as follows:
 ```
 processed_mnm_root
 	|
@@ -191,6 +193,8 @@ python process_mnm.py --data_dir /path/to/MnM --save_data_dir /path/to/processed
 ```
 
 To see all the available arguments (e.g. labeled | unlabeled, slice number, etc.) run the following command:
-```python process_mnm.py --help```
+```
+python process_mnm.py --help
+```
 
 ## License
