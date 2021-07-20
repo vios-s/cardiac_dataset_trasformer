@@ -221,7 +221,7 @@ class GenACDC(Dataset):
         ) -> np.array:
         images, labels = [], []
         subject_idx, frame_idx = [], []
-        volumes = list(range(1, 101))
+        volumes = list(range(101, 151))
         more_than_10_cnt = 0
         for patient_i in volumes:
             patient = 'patient%03d' % patient_i
@@ -249,15 +249,15 @@ class GenACDC(Dataset):
             im_name = patient + '_4d.nii.gz'
             im = self._process_raw_image(im_name, patient_folder)
             frames = range(im.shape[-1])
-            if include_all:
-                gt = [f for f in os.listdir(patient_folder) if 'gt' in f and not f.startswith('._')]
+            gt = [f for f in os.listdir(patient_folder) if 'gt' in f and not f.startswith('._')]
+            if len(gt) > 0:
                 gt_ims = [f.replace('_gt', '') for f in gt if not f.startswith('._')]
-                exclude_frames = [int(gt_im.split('.')[0].split('frame')[1]) for gt_im in gt_ims]
+            else:
+                gt_ims = [f for f in os.listdir(patient_folder) if 'frame' in f and not f.startswith('._')]
+            exclude_frames = [int(gt_im.split('.')[0].split('frame')[1]) for gt_im in gt_ims]
+            if include_all:
                 frames = [f for f in range(im.shape[-1]) if (f > exclude_frames[0] and f < exclude_frames[1]) or f == exclude_frames[0] or f == exclude_frames[1]]
             else:
-                gt = [f for f in os.listdir(patient_folder) if 'gt' in f and not f.startswith('._')]
-                gt_ims = [f.replace('_gt', '') for f in gt if not f.startswith('._')]
-                exclude_frames = [int(gt_im.split('.')[0].split('frame')[1]) for gt_im in gt_ims]
                 frames = [f for f in range(im.shape[-1]) if f not in exclude_frames and f > exclude_frames[0] and f < exclude_frames[1]]
             for frame in frames:
                 subject_idx.append(patient_i)
