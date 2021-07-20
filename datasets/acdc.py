@@ -124,10 +124,12 @@ class GenACDC(Dataset):
     def _load_raw_labeled_data(self) -> typing.List[np.array]:
         images, masks_lv, masks_rv, masks_myo, labels = [], [], [], [], []
         subject_idx, frame_idx = [], []
-        volumes = list(range(1, 101))
+        volumes = list(range(1, 151))
         for patient_i in volumes:
             patient = 'patient%03d' % patient_i
             patient_folder = os.path.join(self.data_dir, patient)
+            if os.path.exists(patient_folder) == False:
+                continue
             # retrieve pathology label from patient's Info.cfg file
             cfg = [f for f in os.listdir(patient_folder) if 'cfg' in f and f.startswith('Info')]
             label_file = open(os.path.join(patient_folder, cfg[0]), mode = 'r')
@@ -221,11 +223,13 @@ class GenACDC(Dataset):
         ) -> np.array:
         images, labels = [], []
         subject_idx, frame_idx = [], []
-        volumes = list(range(101, 151))
+        volumes = list(range(1, 151))
         more_than_10_cnt = 0
         for patient_i in volumes:
             patient = 'patient%03d' % patient_i
             patient_folder = os.path.join(self.data_dir, patient)
+            if os.path.exists(patient_folder) == False:
+                continue
             # retrieve pathology label from patient's Info.cfg file
             cfg = [f for f in os.listdir(patient_folder) if 'cfg' in f and f.startswith('Info')]
             label_file = open(os.path.join(patient_folder, cfg[0]), mode = 'r')
